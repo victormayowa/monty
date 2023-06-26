@@ -1,11 +1,13 @@
-#ifndef MONTY_H
-#define MONTY_H
+#ifndef DATA_STRUCTURE_H
+#define DATA_STRUCTURE_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <fcntl.h>
 
-extern int d; /* Variable use to store stack int data */
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
@@ -34,14 +36,47 @@ typedef struct instruction_s
 	char *opcode;
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
-
-int check(char *fn);
-int opc_checker(char *opc, int ln);
+/**
+ * struct vehicle - args, file, line content
+ * @ag: args value
+ * @f: pointer to file
+ * @c: line values
+ * @l: change stack of queue by flag
+ */
+typedef struct vehicle
+{
+	char *ag;
+	FILE *f;
+	char *c;
+	int l;
+} veh;
+extern veh car;
+/**
+ * functions
+ */
+void node(stack_t **st, unsigned int ln);
+void add(stack_t **st, unsigned int ln);
+void queue_top(stack_t **st, unsigned int ln);
+void queue(stack_t **st, unsigned int ln);
+void _div(stack_t **st, unsigned int ln);
+void _mul(stack_t **st, unsigned int ln);
+void mod(stack_t **st, unsigned int ln);
+void nop(stack_t **st, unsigned int ln);
+void pchar(stack_t **st, unsigned int ln);
+void pstr(stack_t **st, unsigned int ln);
+void swap(stack_t **st, unsigned int ln);
+void sub(stack_t **st, unsigned int ln);
+void stack(stack_t **st, unsigned int ln);
+void rotr(stack_t **st, unsigned int ln);
+void rotl(stack_t **st, unsigned int ln);
+/**
+ * opcode
+ */
+void redeem(stack_t *st);
 void pall(stack_t **st, unsigned int ln);
 void pin(stack_t **st, unsigned int ln);
 void push(stack_t **st, unsigned int n);
-int arg_checker(char *s, unsigned int ln);
-char *mal(char *b);
-void (*get_opcode(char *))(stack_t **, unsigned int);
-void processor(char *fn);
-#endif /* #ifndef MONTY_H */
+void pop(stack_t **st, unsigned int ln);
+int exec(char *val, stack_t **st, unsigned int ln, FILE *fl);
+ssize_t custom_getline(char **lineptr, size_t *n, FILE *stream);
+#endif /* #ifndef  DATA_STRUCTURE_H*/

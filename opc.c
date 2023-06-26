@@ -1,34 +1,50 @@
 #include "monty.h"
+
 /**
  * push - push func to stack
  * @st: point to linked head
  * @n: line where instruct is found
  * Return: node number in list
  */
+
 void push(stack_t **st, unsigned int n)
 {
-	stack_t *t;
-	stack_t *node;
+	int i, k = 0, fl;
 
-	(void)n;
-	node = malloc(sizeof(stack_t));
-	if (node == NULL)
+	if (car.ag)
 	{
-		fprintf(stderr, "Error: malloc failed");
+		if (car.ag[0] == '-')
+		{
+			k++;
+		}
+		for (; car.ag[k] != '\0'; k++)
+		{
+			if (car.ag[k] > 57 || car.ag[k] < 48)
+				fl = 1;
+		}
+		if (fl == 1)
+		{ fprintf(stderr, "L%d: usage: push integer\n", n);
+			fclose(car.f);
+			free(car.c);
+			redeem(*st);
+			exit(EXIT_FAILURE);
+		}
+	}
+	else
+	{
+		fprintf(stderr, "L%d: usage: push integer\n", n);
+		fclose(car.f);
+		free(car.c);
+		redeem(*st);
 		exit(EXIT_FAILURE);
 	}
-	node->n = d;
-	node->prev = NULL;
-	node->next = NULL;
-	if (*st == NULL)
+	i = atoi(car.ag);
+	if (car.l == 0)
+		node(st, i);
+	else
 	{
-		*st = node;
-		return;
+		queue(st, i);
 	}
-	t = *st;
-	t->prev = node;
-	node->next = t;
-	*st =  node;
 }
 
 /**
@@ -39,15 +55,15 @@ void push(stack_t **st, unsigned int n)
  */
 void pin(stack_t **st, unsigned int ln)
 {
-	stack_t *p = NULL;
-
-	(void)ln;
-	if (*st  == NULL)
+	if (*st == NULL)
 	{
-		return;
+		fprintf(stderr, "L%u: can't pint, stack empty\n", ln);
+		fclose(car.f);
+		free(car.c);
+		redeem(*st);
+		exit(EXIT_FAILURE);
 	}
-	p = *st;
-	printf("%d\n", p->n);
+	printf("%d\n", (*st)->n);
 }
 
 /**
@@ -61,49 +77,52 @@ void pall(stack_t **st, unsigned int ln)
 	stack_t *p;
 
 	(void)ln;
-	if (*st == NULL)
+	p = *st;
+	if (p == NULL)
 	{
 		return;
 	}
-	p = *st;
 	for (; p != NULL; p = p->next)
 		printf("%d\n", p->n);
 }
 
 /**
- * check - func that checksif file extension is correct
- * @fn: filename
- * Return: int
+ * redeem - func that frees stackct
+ * @st: stackhead
+ * none
  */
-int check(char *fn)
+void redeem(stack_t *st)
 {
-	char *e = strrchr(fn, ',');
+	stack_t *a;
 
-	if (e == NULL || strcmp(e, ".m") != 0)
+	a = st;
+	while (st)
 	{
-		fprintf(stderr, "Error: Can't open file %s\n", fn);
-		return (0);
+		a = st->next;
+		free(st);
+		st = a;
 	}
-	return (1);
 }
 
-
 /**
- * get_opcode - selects the correct stack func
- * @opc: represents stack op to done
- * Return: funcpointer
- */
-
-void (*get_opcode(char *opc))(stack_t **head, unsigned int line_number)
+ * pop - pos d top
+ * @st: stack head
+ * @ln: number of lines
+ * Return:  void
+*/
+void pop(stack_t **st, unsigned int ln)
 {
-	instruction_t ops[] = {{"push", push}, {"pall", pall},
-		{"pint", pin}, {NULL, NULL}};
-	int j = 0;
+	stack_t *a;
 
-	for (j = 0; j < 3; j++)
+	if (*st == NULL)
 	{
-		if (strcmp(ops[j].opcode, opc) == 0)
-			return (ops[j].f);
+		fprintf(stderr, "L%d: can't pop an empty stack\n", ln);
+		fclose(car.f);
+		free(car.c);
+		redeem(*st);
+		exit(EXIT_FAILURE);
 	}
-	return (NULL);
+	a = *st;
+	*st = a->next;
+	free(a);
 }
