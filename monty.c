@@ -1,5 +1,6 @@
 #include "monty.h"
 #include <stdio.h>
+veh car = {NULL, NULL, NULL, 0};
 /**
 * main - entry point for monty interpreter
 * @argc: args count
